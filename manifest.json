@@ -1,21 +1,21 @@
 {
-  "short_name": "Warrior Clock",
+  "short_name": "Warrior Calendar",
   "name": "Warrior Target Clock & Calendar",
   "icons": [
     {
       "src": "schedule.png",
       "type": "image/png",
       "sizes": "192x192",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
       "src": "schedule.png",
       "type": "image/png",
       "sizes": "512x512",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ],
-  "start_url": "/",
+  "start_url": ".",
   "background_color": "#05070a",
   "theme_color": "#05070a",
   "display": "standalone",
