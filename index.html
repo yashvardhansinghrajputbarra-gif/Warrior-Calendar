@@ -15,7 +15,6 @@
     <link rel="apple-touch-icon" href="schedule.png">
 
     <style>
-        
         :root {
             --glass-bg: rgba(13, 16, 21, 0.85);
             --glass-border: rgba(255, 255, 255, 0.05);
@@ -325,6 +324,7 @@
         const jumpInput = document.getElementById("jumpToDate");
         const snapTodayBtn = document.getElementById("snapToday");
 
+        // Starts on Monday
         const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -370,6 +370,15 @@
             if (selectedDateKey) {
                 const [sYear, sMonth, sDay] = selectedDateKey.split("-").map(Number);
                 evaluateTemporalDelta(sYear, sMonth, sDay);
+            }
+
+            // Register Service Worker for PWA App Icon support
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('sw.js')
+                        .then(reg => console.log('Service Worker Registered!', reg.scope))
+                        .catch(err => console.error('Service Worker Registration Failed:', err));
+                });
             }
         }
 
@@ -478,7 +487,6 @@
                 deltaString = `<span class="highlight-num">${absoluteDelta}</span> ${systemDayLabel}`;
             }
 
-            // FIXED TEXT: Uses "left" for future and "ago" for past
             if (deltaDays === 0) {
                 statusPill.innerHTML = `✨ <span>Today</span> — Current timeline boundary`;
             } else if (deltaDays > 0) {
