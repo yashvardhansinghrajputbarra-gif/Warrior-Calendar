@@ -324,7 +324,7 @@
         const jumpInput = document.getElementById("jumpToDate");
         const snapTodayBtn = document.getElementById("snapToday");
 
-        // Starts on Monday
+        // Monday Start config
         const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
         const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -372,12 +372,12 @@
                 evaluateTemporalDelta(sYear, sMonth, sDay);
             }
 
-            // Register Service Worker for PWA App Icon support
+            // Service worker mount with direct bypass checks
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', () => {
-                    navigator.serviceWorker.register('sw.js')
-                        .then(reg => console.log('Service Worker Registered!', reg.scope))
-                        .catch(err => console.error('Service Worker Registration Failed:', err));
+                    navigator.serviceWorker.register('/sw.js')
+                        .then(reg => console.log('Service Worker Mounted!', reg.scope))
+                        .catch(err => console.error('Service Worker Registry Broken:', err));
                 });
             }
         }
