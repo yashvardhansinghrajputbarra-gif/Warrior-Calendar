@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Warrior Calendar</title>
+    <link class="brand-icon" rel="icon" type="image/png" href="schedule.png">
+    <style>
+        :root {
+            --glass-bg: rgba(13, 16, 21, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.05);
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.45);
+            --text-pill: rgba(255, 255, 255, 0.25);
+        }
+
+        body {
+            margin: 0;
+            background: #05070a;
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+            position: relative;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: -30%;
+            left: -20%;
+            width: 140%;
+            height: 140%;
+            background: 
+                radial-gradient(circle at 10% 20%, #0a0f18 0%, transparent 40%),
+                radial-gradient(circle at 90% 10%, #0d131f 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, #07090d 0%, #05070a 80%);
+            z-index: -2;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(50px) saturate(140%);
+            -webkit-backdrop-filter: blur(50px) saturate(140%);
+            border: 1px solid var(--glass-border);
+            border-top: 1px solid rgba(255, 255, 255, 0.09);
+            border-radius: 32px;
+            padding: 40px 45px;
+            width: 100%;
+            max-width: 550px;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 
+                0 4px 30px rgba(0, 0, 0, 0.5),
+                0 30px 70px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0px rgba(255, 255, 255, 0.05);
+        }
+
+        .title-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .brand-icon {
+            width: 20px;
+            height: 20px;
+            object-fit: contain;
+            opacity: 0.8;
+        }
+
+        .main-title {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: rgba(255, 255, 255, 0.45);
+            text-transform: uppercase;
+        }
+
+        .cal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            gap: 16px;
+        }
+
+        .current-view {
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+            text-align: left;
+            flex-shrink: 0;
+        }
+
+        .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: var(--text-main);
+            padding: 8px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .today-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #ffffff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: all 0.2s ease;
+        }
+
+        .today-btn:hover {
+            background: #ffffff;
+            color: #05070a;
+        }
+
+        .jump-input {
+            background: rgba(5, 7, 10, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 7px 10px;
+            outline: none;
+            cursor: pointer;
+            width: 125px;
+            box-sizing: border-box;
+            transition: all 0.2s ease;
+        }
+
+        .jump-input:hover, .jump-input:focus {
+            background: rgba(5, 7, 10, 0.9);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .weekday-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .weekday {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-pill);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(6, 1fr);
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-main);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+        }
+
+        .day-cell:hover:not(.empty) {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .day-cell.empty {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .day-cell.today {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            font-weight: 700;
+        }
+
+        .day-cell.selected {
+            background: var(--text-main);
+            color: #05070a;
+            font-weight: 700;
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15);
+        }
+
+        .pill-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .pill {
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+            background: rgba(5, 7, 10, 0.7);
+            color: rgba(255, 255, 255, 0.6);
+            padding: 8px 24px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.4),
+                inset 0 1px 1px rgba(0, 0, 0, 0.6);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .pill span {
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .pill .highlight-num {
+            font-family: ui-monospace, SFMono-Regular, "SF Mono", monospace;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.12);
+            padding: 2px 7px;
+            border-radius: 6px;
+            margin: 0 2px;
+            font-weight: 700;
+        }
+
+        @media (max-width: 600px) {
+            body { overflow-y: auto; }
+            .glass-panel { padding: 30px 20px; border-radius: 28px; }
+            .day-cell { font-size: 14px; border-radius: 8px; }
+            .pill { font-size: 12px; padding: 7px 16px; }
+            .cal-header { flex-direction: column; align-items: flex-start; gap: 14px; }
+            .controls-right { width: 100%; justify-content: space-between; }
+            .current-view { text-align: center; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="glass-panel">
+        <div class="title-wrapper">
+            <img src="schedule.png" alt="🔒" class="brand-icon" onerror="this.style.display='none'">
+            <h1 class="main-title">Warrior Calendar</h1>
+        </div>
+
+        <div class="cal-header">
+            <div class="current-view" id="monthYearTitle">Calendar</div>
+            
+            <div class="controls-right">
+                <button class="today-btn" id="snapToday">Today</button>
+                <input type="month" class="jump-input" id="jumpToDate" title="Jump to date">
+                <button class="nav-btn" id="prevMonth">←</button>
+                <button class="nav-btn" id="nextMonth">→</button>
+            </div>
+        </div>
+
+        <div class="weekday-grid" id="weekdayGrid"></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+
+        <div class="pill-container">
+            <div class="pill" id="statusPill">
+                Select any date to trace temporal deviation
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const calendarGrid = document.getElementById("calendarGrid");
+        const weekdayGrid = document.getElementById("weekdayGrid");
+        const monthYearTitle = document.getElementById("monthYearTitle");
+        const statusPill = document.getElementById("statusPill");
+        const jumpInput = document.getElementById("jumpToDate");
+        const snapTodayBtn = document.getElementById("snapToday");
+
+        const weekdays = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+        const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+
+        let currentDate = new Date();
+        let displayMonth = localStorage.getItem("warrior_displayMonth") !== null ? parseInt(localStorage.getItem("warrior_displayMonth")) : currentDate.getMonth();
+        let displayYear = localStorage.getItem("warrior_displayYear") !== null ? parseInt(localStorage.getItem("warrior_displayYear")) : currentDate.getFullYear();
+        let selectedDateKey = localStorage.getItem("warrior_selectedDateKey") || null;
+
+        function initCalendar() {
+            document.getElementById("prevMonth").addEventListener("click", () => adjustMonth(-1));
+            document.getElementById("nextMonth").addEventListener("click", () => adjustMonth(1));
+            
+            snapTodayBtn.addEventListener("click", () => {
+                const today = new Date();
+                displayMonth = today.getMonth();
+                displayYear = today.getFullYear();
+                selectedDateKey = `${displayYear}-${displayMonth}-${today.getDate()}`;
+                saveStateToStorage();
+                renderEngine();
+                evaluateTemporalDelta(displayYear, displayMonth, today.getDate());
+            });
+
+            jumpInput.addEventListener("change", (e) => {
+                if (e.target.value) {
+                    const [year, month] = e.target.value.split("-");
+                    displayYear = parseInt(year);
+                    displayMonth = parseInt(month) - 1;
+                    saveStateToStorage();
+                    renderEngine();
+                }
+            });
+            
+            weekdayGrid.innerHTML = "";
+            weekdays.forEach(day => {
+                const dayHeader = document.createElement("div");
+                dayHeader.className = "weekday";
+                dayHeader.textContent = day;
+                weekdayGrid.appendChild(dayHeader);
+            });
+
+            renderEngine();
+
+            if (selectedDateKey) {
+                const [sYear, sMonth, sDay] = selectedDateKey.split("-").map(Number);
+                evaluateTemporalDelta(sYear, sMonth, sDay);
+            }
+        }
+
+        function saveStateToStorage() {
+            localStorage.setItem("warrior_displayMonth", displayMonth);
+            localStorage.setItem("warrior_displayYear", displayYear);
+            localStorage.setItem("warrior_selectedDateKey", selectedDateKey || "");
+        }
+
+        function adjustMonth(direction) {
+            displayMonth += direction;
+            if (displayMonth < 0) {
+                displayMonth = 11;
+                displayYear--;
+            } else if (displayMonth > 11) {
+                displayMonth = 0;
+                displayYear++;
+            }
+            saveStateToStorage();
+            renderEngine();
+        }
+
+        function renderEngine() {
+            calendarGrid.innerHTML = "";
+            monthYearTitle.textContent = `${months[displayMonth]} ${displayYear}`;
+            
+            const padMonth = String(displayMonth + 1).padStart(2, '0');
+            jumpInput.value = `${displayYear}-${padMonth}`;
+
+            let firstDayIndex = new Date(displayYear, displayMonth, 1).getDay();
+            firstDayIndex = firstDayIndex === 0 ? 6 : firstDayIndex - 1;
+
+            const totalDays = new Date(displayYear, displayMonth + 1, 0).getDate();
+
+            for (let i = 0; i < firstDayIndex; i++) {
+                const emptyCell = document.createElement("div");
+                emptyCell.className = "day-cell empty";
+                calendarGrid.appendChild(emptyCell);
+            }
+
+            const todayObj = new Date();
+            
+            for (let day = 1; day <= totalDays; day++) {
+                const cell = document.createElement("div");
+                cell.className = "day-cell";
+                cell.textContent = day;
+
+                const cellDateKey = `${displayYear}-${displayMonth}-${day}`;
+
+                if (day === todayObj.getDate() && displayMonth === todayObj.getMonth() && displayYear === todayObj.getFullYear()) {
+                    cell.classList.add("today");
+                }
+
+                if (selectedDateKey === cellDateKey) {
+                    cell.classList.add("selected");
+                }
+
+                cell.addEventListener("click", () => {
+                    document.querySelectorAll(".day-cell").forEach(c => c.classList.remove("selected"));
+                    cell.classList.add("selected");
+                    selectedDateKey = cellDateKey;
+                    saveStateToStorage();
+                    evaluateTemporalDelta(displayYear, displayMonth, day);
+                });
+
+                calendarGrid.appendChild(cell);
+            }
+
+            const currentRenderedCells = firstDayIndex + totalDays;
+            const targetTotalCells = 42; 
+            for (let i = currentRenderedCells; i < targetTotalCells; i++) {
+                const trailingEmptyCell = document.createElement("div");
+                trailingEmptyCell.className = "day-cell empty";
+                calendarGrid.appendChild(trailingEmptyCell);
+            }
+        }
+
+        function evaluateTemporalDelta(year, month, day) {
+            const target = new Date(year, month, day);
+            const today = new Date();
+            
+            const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const startOfTarget = new Date(target.getFullYear(), target.getMonth(), target.getDate());
+
+            const msPerDay = 24 * 60 * 60 * 1000;
+            const deltaDays = Math.round((startOfTarget - startOfToday) / msPerDay);
+            const absoluteDelta = Math.abs(deltaDays);
+
+            const formattedDateStr = `${day} ${months[month].substring(0, 3)} ${year}`;
+
+            let deltaString = "";
+            if (absoluteDelta >= 365) {
+                const calculatedYears = Math.floor(absoluteDelta / 365);
+                const remainingDays = absoluteDelta % 365;
+                
+                let systemYearLabel = calculatedYears === 1 ? "year" : "years";
+                let systemDayLabel = remainingDays === 1 ? "day" : "days";
+
+                if (remainingDays === 0) {
+                    deltaString = `<span class="highlight-num">${calculatedYears}</span> ${systemYearLabel}`;
+                } else {
+                    deltaString = `<span class="highlight-num">${calculatedYears}</span> ${systemYearLabel} and <span class="highlight-num">${remainingDays}</span> ${systemDayLabel}`;
+                }
+            } else {
+                let systemDayLabel = absoluteDelta === 1 ? "day" : "days";
+                deltaString = `<span class="highlight-num">${absoluteDelta}</span> ${systemDayLabel}`;
+            }
+
+            // FIXED TEXT: Uses "left" for future and "ago" for past
+            if (deltaDays === 0) {
+                statusPill.innerHTML = `✨ <span>Today</span> — Current timeline boundary`;
+            } else if (deltaDays > 0) {
+                statusPill.innerHTML = `📅 <span>${formattedDateStr}</span> — ${deltaString} left`;
+            } else {
+                statusPill.innerHTML = `⏳ <span>${formattedDateStr}</span> — ${deltaString} ago`;
+            }
+        }
+
+        initCalendar();
+    </script>
+</body>
+</html>
