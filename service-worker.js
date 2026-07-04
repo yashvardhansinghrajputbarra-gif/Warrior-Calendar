@@ -8,6 +8,6 @@ self.addEventListener('activate', (e) => {
 });
 
 self.addEventListener('fetch', (e) => {
-  // Pass-through strategy to let Vercel handle delivery
+  // Let Vercel handle live file routing seamlessly
   e.respondWith(fetch(e.request));
 });
