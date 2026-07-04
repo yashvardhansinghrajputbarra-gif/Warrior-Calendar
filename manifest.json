@@ -3,27 +3,15 @@
   "name": "Warrior Target Clock & Calendar",
   "icons": [
     {
-      "src": "schedule.png",
-      "sizes": "192x192",
-      "type": "image/png",
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='512' height='512'><rect width='512' height='512' rx='110' fill='%2305070a'/><g transform='matrix(0.85 0 0 0.85 38.4 38.4)'><rect x='32' y='96' width='448' height='384' rx='48' fill='%2338bdf8'/><rect x='32' y='96' width='448' height='96' rx='0' fill='%230284c7'/><circle cx='112' cy='48' r='24' fill='%23bae6fd'/><circle cx='256' cy='48' r='24' fill='%23bae6fd'/><circle cx='400' cy='48' r='24' fill='%23bae6fd'/><path d='M160 256h64v64h-64zm96 0h64v64h-64zm96 0h64v64h-64zM160 352h64v64h-64zm96 0h64v64h-64zm96 0h64v64h-64z' fill='%23f8fafc'/></g></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "schedule.png",
+      "src": "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512' width='512' height='512'><rect width='512' height='512' rx='110' fill='%2305070a'/><g transform='matrix(0.85 0 0 0.85 38.4 38.4)'><rect x='32' y='96' width='448' height='384' rx='48' fill='%2338bdf8'/><rect x='32' y='96' width='448' height='96' rx='0' fill='%230284c7'/><circle cx='112' cy='48' r='24' fill='%23bae6fd'/><circle cx='256' cy='48' r='24' fill='%23bae6fd'/><circle cx='400' cy='48' r='24' fill='%23bae6fd'/><path d='M160 256h64v64h-64zm96 0h64v64h-64zm96 0h64v64h-64zM160 352h64v64h-64zm96 0h64v64h-64zm96 0h64v64h-64z' fill='%23f8fafc'/></g></svg>",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "schedule.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "schedule.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "maskable"
     }
   ],
